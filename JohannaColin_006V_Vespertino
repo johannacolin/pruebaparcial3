@@ -1,0 +1,98 @@
+# Definir la matriz de lotes y su estado (1 = disponible, 0 = vendido)
+lotes = [[1, 1, 0, 1, 0], 
+         [0, 1, 0, 1, 1], 
+         [1, 0, 1, 1, 1]]
+
+# Definir los detalles de los lotes
+detalles_lotes = [["Lote 1", "500 m2", "$100000"], 
+                  ["Lote 2", "600 m2", "$120000"], 
+                  ["Lote 3", "550 m2", "$110000"]]
+
+# Definir la lista de clientes
+clientes = []
+
+# Función para verificar si la opción del menú es válida
+def es_opcion_valida(opcion, num_opciones):
+    return opcion.isdigit() and 1 <= int(opcion) <= num_opciones
+
+# Función para verificar si las coordenadas del lote son válidas
+def son_coordenadas_validas(fila, columna, num_filas, num_columnas):
+    return 0 <= fila < num_filas and 0 <= columna < num_columnas
+
+# Funciones de la aplicación
+def ver_disponibilidad(lotes):
+    for fila in lotes:
+        for lote in fila:
+            if lote == 1:
+                print("[ ]", end=' ')
+            else:
+                print("[X]", end=' ')
+        print()
+
+def seleccionar_lote(lotes, detalles_lotes):
+    fila = int(input("Ingrese la fila del lote: ")) - 1 # Restar 1 para hacer la numeración desde 1
+    columna = int(input("Ingrese la columna del lote: ")) - 1 # Restar 1 para hacer la numeración desde 1
+    if son_coordenadas_validas(fila, columna, len(lotes), len(lotes[0])):
+        if lotes[fila][columna] == 1: # Lote disponible
+            lotes[fila][columna] = 0
+            rut = input("Ingrese su RUT: ")
+            nombre = input("Ingrese su nombre completo: ")
+            telefono = input("Ingrese su número de teléfono: ")
+            email = input("Ingrese su correo electrónico: ")
+            indice = fila * len(lotes[0]) + columna
+            if indice < len(detalles_lotes):
+                clientes.append([rut, nombre, telefono, email, detalles_lotes[indice]])
+                print("Lote seleccionado con éxito.")
+            else:
+                print("Lo siento, no hay detalles disponibles para el lote seleccionado.")
+        else: # Lote vendido
+            print("El lote ya ha sido vendido. Por favor, elija otro.")
+    else:
+        print("Coordenadas inválidas. Por favor, intente de nuevo.")
+
+
+def ver_detalles_lote(detalles_lotes):
+    lote = int(input("Ingrese el número del lote para ver los detalles: ")) - 1 # Restar 1 para hacer la numeración desde 1
+    if 0 <= lote < len(detalles_lotes):
+        print(detalles_lotes[lote])
+    else:
+        print("Número de lote inválido. Por favor, intente de nuevo.")
+
+def ver_clientes(clientes):
+    for i, cliente in enumerate(clientes, start=1):
+        print(f"Cliente {i}:")
+        print(f"RUT: {cliente[0]}")
+        print(f"Nombre completo: {cliente[1]}")
+        print(f"Número de teléfono: {cliente[2]}")
+        print(f"Correo electrónico: {cliente[3]}")
+        print(f"Detalles del lote: {cliente[4]}")
+        print()
+
+def salir_programa():
+    print("Adiós!")
+    exit()
+
+# Menú interactivo
+while True:
+    print("\n1. Ver disponibilidad de lotes")
+    print("2. Seleccionar un lote")
+    print("3. Ver detalles del lote seleccionado")
+    print("4. Ver clientes")
+    print("5. Salir")
+
+    opcion = input("Seleccione una opción: ")
+
+    if es_opcion_valida(opcion, 5):
+        opcion = int(opcion)
+        if opcion == 1:
+            ver_disponibilidad(lotes)
+        elif opcion == 2:
+            seleccionar_lote(lotes, detalles_lotes)
+        elif opcion == 3:
+            ver_detalles_lote(detalles_lotes)
+        elif opcion == 4:
+            ver_clientes(clientes)
+        elif opcion == 5:
+            salir_programa()
+    else:
+        print("Opción inválida. Por favor, intente de nuevo."
